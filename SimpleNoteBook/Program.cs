@@ -1,49 +1,31 @@
-﻿using test1;
-using static System.String;
-namespace test1
+﻿using System.IO.Compression;
+using System.Linq;
+using static System.Console;
+using static System.Linq.Enumerable;
+namespace SimpleNoteBook;
+
+static class StringExt
 {
-    public static class TestSet1
-    {
-        public static string ToStringAndJoin(this IEnumerable<int> s) => Join(",", s.Select(x => x.ToString()));
-        // this 연습
-        public static (string, string) SplitAt(this string s, int at) => (s.Substring(0, at), s.Substring(at)); //??
-        public static (string Base, string Quote) AsPair(this string ccyPair) => ccyPair.SplitAt(3);
-
-        public static void Test1()
-        {
-            var (baseCcy, quoteCcy) = "abcdefg".SplitAt(3);
-            var pair = "ghijkl".AsPair();
-            Console.WriteLine(baseCcy);
-            Console.WriteLine(pair.Quote);
-        }
-
-        // 책에 퀴즈처럼 있길래 작성해봄
-        public static (IEnumerable<int>, IEnumerable<int>) Partition(this IEnumerable<int> s, Func<int, bool> fn) =>
-            (s.Where(fn), s.Where(x => !fn(x)));
-        
-
-        public static void PartitionMaker()
-        {
-            var (even, odd) = Enumerable.Range(1, 10).Partition(x => x % 2 == 0);
-
-            Console.WriteLine(even.ToStringAndJoin());
-            Console.WriteLine(odd.ToStringAndJoin());
-        }
-    }
+    public static string ToSentenceCase(this string s) =>
+        s == string.Empty ? string.Empty : char.ToUpperInvariant(s[0]) + s.ToLower()[1..];
 }
-
-namespace Test2
+public static class Program
 {
-    public class Program
+    private static int counter;
+    private static string PrependCounter(string s) => $"{++counter}, {s}";
+
+    private static List<string> StateMutatingFormat(this List<string> list)
+        => list.AsParallel().Select(StringExt.ToSentenceCase).Select(PrependCounter).ToList();
+
+    private static List<string> Format(this List<string> list) 
+        => list.Select(StringExt.ToSentenceCase).Zip(Range(1, list.Count), (l, r) => $"{r} {l}").ToList();
+    
+    public static void Main(string[] args)
     {
-        private static Comparison<int> alphabetically = (left, right) => Compare(left.ToString(), right.ToString(), StringComparison.Ordinal);    
+        var itemList1 = Range(1, 10).Select(x => $"item{x}").ToList();
+        // ar itemList2 = Range(1, 10).Select(x => $"item{x}").ToList();
         
-        public static void Main(string[] args)
-        {
-            var list = Enumerable.Range(1, 10).Select(x => x * 3).ToList();
-            list.Sort(alphabetically);
-            Console.WriteLine(list.ToStringAndJoin());
-            
-        }
+        //itemList1.Format().ForEach(WriteLine);
+        //WriteLine(itemList2.StateMutatingFormat().ToStringAndJoin()); // Order 엉망
     }
 }
