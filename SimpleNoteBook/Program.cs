@@ -24,7 +24,6 @@ public static class Program
     {
         var itemList1 = Range(1, 10).Select(x => $"item{x}").ToList();
         // ar itemList2 = Range(1, 10).Select(x => $"item{x}").ToList();
-        
         //itemList1.Format().ForEach(WriteLine);
         //WriteLine(itemList2.StateMutatingFormat().ToStringAndJoin()); // Order 엉망
     }
