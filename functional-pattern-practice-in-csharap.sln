@@ -2,8 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "functional-pattern-practice-in-csharap", "functional-pattern-practice-in-csharap\functional-pattern-practice-in-csharap.csproj", "{28F99ECF-7740-4588-A00E-4CD88CF505E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleNoteBook", "SimpleNoteBook\SimpleNoteBook.csproj", "{B617866E-9737-45C2-B480-2C0EAC3134ED}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,9 +12,5 @@ Global
 		{28F99ECF-7740-4588-A00E-4CD88CF505E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28F99ECF-7740-4588-A00E-4CD88CF505E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28F99ECF-7740-4588-A00E-4CD88CF505E7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B617866E-9737-45C2-B480-2C0EAC3134ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B617866E-9737-45C2-B480-2C0EAC3134ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B617866E-9737-45C2-B480-2C0EAC3134ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B617866E-9737-45C2-B480-2C0EAC3134ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
