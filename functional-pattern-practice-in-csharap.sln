@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "functional-pattern-practice-in-csharap", "functional-pattern-practice-in-csharap\functional-pattern-practice-in-csharap.csproj", "{28F99ECF-7740-4588-A00E-4CD88CF505E7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chapt1", "Chapt1\Chapt1.csproj", "{28F99ECF-7740-4588-A00E-4CD88CF505E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
