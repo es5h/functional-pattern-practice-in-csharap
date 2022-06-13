@@ -16,17 +16,24 @@ public struct Option<T>
     private readonly T? _value;
     private readonly bool _isSome;
     
-    internal Option(T value)
+    public Option(T value)
     {
         _value = value ?? throw new ArgumentNullException();
         _isSome = true;
     }
 
+    public override string ToString() => _isSome ? $"Some({_value})" : "None";
+    
     public static implicit operator Option<T>(NoneType _)
         => default;
 
     public static implicit operator Option<T>(T value)
-        => value is null ? None : Some(value);
+        => value is null ? None : Some(value);  
     public R Match<R>(Func<R> None, Func<T, R> Some)
         => _isSome ? Some(_value!) : None();
+
+    public IEnumerable<T> AsEnumerable()
+    {
+        if (_isSome) yield return _value!;
+    }
 }

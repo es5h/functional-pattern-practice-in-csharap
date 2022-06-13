@@ -6,7 +6,7 @@ public class Util
 {
     public struct Age
     {
-        private int Value { get; }
+        public int Value { get; }
     
         public static Option<Age> Create(int age)
             => IsValid(age) ? Some(new Age(age)) : None;
@@ -16,5 +16,7 @@ public class Util
     
         private static bool IsValid(int age)
             => 0 <= age && age < 120;
+
+        public override string ToString() => Value.ToString();
     }
 }
