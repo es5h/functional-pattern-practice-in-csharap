@@ -1,4 +1,8 @@
-﻿using System.Net.WebSockets;
+﻿using System.Data;
+using System.Data.SqlClient;
+using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
+using Dapper;
 using Functional.F1;
 using static Functional.F1.F;
 using static System.Console;
@@ -47,6 +51,34 @@ greetWith("Hello")("World");
 var greetWith2 = greet.Curry();
 var greetNostalgically = greetWith2("안녕");
 names.Map(greetNostalgically).ForEach(WriteLine);
+
+
+// Example6. Dapper Partial-application-friendly-api
+
+IEnumerable<T> Query<T>(this IDbConnection conn, string sqlQuery, object param = null,
+    SqlTransaction tran = null, bool buffered = true)
+{
+}
+
+// original
+const string sql = "SELECT 1";
+string connString = "connString";
+using (var conn = new SqlConnection(connString))
+{
+    conn.Open();
+    var result = conn.Query(sql);
+}
+
+// StartUp.cs
+// ConnectionString connString = configuration.GetSection("ConnecionString").Value;
+
+
+public record ConnectionString(string Value)
+{
+    public static implicit operator string(ConnectionString c) => c.Value;
+    public static implicit operator ConnectionString(string s) => new(s);
+}
+
 
 public static class FuncExt
 {
