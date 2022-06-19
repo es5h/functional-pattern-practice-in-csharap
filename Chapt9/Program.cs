@@ -54,11 +54,11 @@ names.Map(greetNostalgically).ForEach(WriteLine);
 
 
 // Example6. Dapper Partial-application-friendly-api
-
-IEnumerable<T> Query<T>(this IDbConnection conn, string sqlQuery, object param = null,
-    SqlTransaction tran = null, bool buffered = true)
-{
-}
+//
+// IEnumerable<T> Query<T>(this IDbConnection conn, string sqlQuery, object param = null,
+//     SqlTransaction tran = null, bool buffered = true)
+// {
+// }
 
 // original
 const string sql = "SELECT 1";
@@ -71,7 +71,46 @@ using (var conn = new SqlConnection(connString))
 
 // StartUp.cs
 // ConnectionString connString = configuration.GetSection("ConnecionString").Value;
+ConnectionString connStr = null;
 
+SqlTemplate sel = "SELECT * FROM EMPLOYEES",
+    sqlById = $"{sel} WHERE ID = @ID",
+    sqlByName = $"{sel} WHERE LASTNAME = @LASTNAME";
+
+// queryById : object -> IEnumerable<Employee>
+var queryById = connStr.Retrieve<Employee>(sqlById); // connStr and query are fixed.
+// queryById : object -> IEnumerable<Employee>
+var queryByLastName = connStr.Retrieve<Employee>(sqlByName);
+
+// lookupEmployee : Guid -> Option<Employee>
+Option<Employee> lookupEmployee(Guid id) => queryById(new { Id = id }).SingleOrDefault();
+// findEmployeesByLastName : string -> IEnumerable<Employee>
+IEnumerable<Employee> findEmployeesByLastName(string lastName) => queryByLastName(new { LastName = lastName });
+
+
+public record Employee;
+public static class ConnectionStringExt
+{
+    public static Func<object, IEnumerable<T>> Retrieve<T>
+    (
+        this ConnectionString connStr,
+        SqlTemplate sqlTemplate
+    )
+    {
+        throw new NotImplementedException();
+    }
+    // Retrieve<T> : (ConnectionString, SqlTemplate) => object => IEnumerable<T>
+    // => param, Connect(connStr, conn => conn.Query<T>(sql, param));
+}
+
+// Example 7. Modularzing
+
+
+public record SqlTemplate(string Value)
+{
+    public static implicit operator string(SqlTemplate c) => c.Value;
+    public static implicit operator SqlTemplate(string s) => new(s);
+}
 
 public record ConnectionString(string Value)
 {
