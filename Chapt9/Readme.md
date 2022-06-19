@@ -135,23 +135,55 @@ static Func<MakeTransfer, IResult> HandleSaveTransfer
             Valid: result => result.Match
                 (
                     Exception : _ => StatusCode(//500..
-                    Success :  => Ok()
+                    Success : _ => Ok()
                 )
          )
 ```
 
 # Mapping (Functions - Api EndPOints)
 ```c#
-  using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
+
+var app = WebApplication.Create(); // create application
+var handleSaveTrasnfer = ConfigureSaveTrasnferHandler(app.Configuration);
+
+static Func<MakeTransfer, IResult> ConfigureSaveTrasnferHandler(IConfigureation config)
+{
+  ConnectionString connString = config.GetSection("ConnectionString").Value;
+  SqlTemplate InsertTransferSql = "INSERT ..";
   
-  var app = WebApplication.Create(); // create application
-  app.MapGet("/", () => "Hello, World!"); // configure endpoints
+  //TryExecute : ConnectionString -> SqlTemplate -> object -> Exceptional<Unit>
+  var save = connString.TryExecute(InsertTransferSql);
   
-  app.MapPost("/todos", async ([FromServices] TodoDbContext db, Todo todo) => {
-    await db.Todos.AddAsync(todo);
-    await db.SaveChangesAsync();
-    
-    return new StatusCodeResult(204);
-  });
-  await app.RunAsync(); // starts listening for requests
+  var validate = DateNotPast(() => DaterTime.UtcNow);
+  
+  return HandleSaveTrasnfer(validate, save);
+}
+
+app.MapPost("/Transfer/Future", handleSaveTrasnfer);
+
+app.MapGet("/", () => "Hello, World!"); // configure endpoints
+
+app.MapPost("/todos", async ([FromServices] TodoDbContext db, Todo todo) => {
+  await db.Todos.AddAsync(todo);
+  await db.SaveChangesAsync();
+  
+  return new StatusCodeResult(204);
+});
+await app.RunAsync(); // starts listening for requests
+```
+
+dependency가 function의 형태로 주입 되었다. OOP 처럼 decoupling과 testability를 갖고도 interace를 만들필요가 없고 , fake implementation을 위한 setu=p 이 아래와 같이 간소하다.
+
+```c#
+public void WhenValid_AndSaveSucceeds_ThenResonseIsOk(){
+    var handler = HandleSaveTrasnfer(
+        validate: transfer => Valid(transfer),
+        save: _ => Exceptional(Unit())
+    );
+   
+   var result = controller.MakeTrasnfer(MakeTransfer.Dummy);
+   
+   Assert.AreEqual(typeof(OkResult). result.GetType());
+}
 ```

@@ -103,8 +103,12 @@ public static class ConnectionStringExt
     // => param, Connect(connStr, conn => conn.Query<T>(sql, param));
 }
 
-// Example 7. Modularzing
+// Example 7. Modularzing => ReDME
 
+// Exmaple 8. Linq Aggregate Method
+// IEnumerable<T> -> Acc -> (Acc -> T -> Acc) -> Acc
+Enumerable.Range(1, 10).Aggregate(0, (acc, i) => acc + i).Equals()
+    // Aggregate : (Enumerable<T>, (acc, T) ->  acc ) -> acc
 
 public record SqlTemplate(string Value)
 {
