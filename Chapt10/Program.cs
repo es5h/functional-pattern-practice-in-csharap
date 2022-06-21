@@ -16,4 +16,4 @@ Some(multiply).Apply(Some(3)).Apply(Some(4)).ForEach(WriteLine);
 
 // Functor, Applicative, Monad
 // Functor (F<T>, map : (T->R)) -> F<R> , F<T> -> (T -> R) -> F<R>
-// Simillaru, Monad. Bind
+// Simillaru, Monad. Bind M<T> -> T -> M<R> -> M<R>
