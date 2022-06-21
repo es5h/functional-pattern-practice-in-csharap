@@ -187,3 +187,6 @@ public void WhenValid_AndSaveSucceeds_ThenResonseIsOk(){
    Assert.AreEqual(typeof(OkResult). result.GetType());
 }
 ```
+
+## Validation 과 Aggregate
+

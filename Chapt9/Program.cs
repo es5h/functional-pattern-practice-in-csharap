@@ -61,6 +61,7 @@ names.Map(greetNostalgically).ForEach(WriteLine);
 // }
 
 // original
+/*
 const string sql = "SELECT 1";
 string connString = "connString";
 using (var conn = new SqlConnection(connString))
@@ -68,6 +69,7 @@ using (var conn = new SqlConnection(connString))
     conn.Open();
     var result = conn.Query(sql);
 }
+*/
 
 // StartUp.cs
 // ConnectionString connString = configuration.GetSection("ConnecionString").Value;
@@ -87,6 +89,34 @@ Option<Employee> lookupEmployee(Guid id) => queryById(new { Id = id }).SingleOrD
 // findEmployeesByLastName : string -> IEnumerable<Employee>
 IEnumerable<Employee> findEmployeesByLastName(string lastName) => queryByLastName(new { LastName = lastName });
 
+// Example 7. Modularzing => ReDME
+
+// Exmaple 8. Linq Aggregate Method
+// IEnumerable<T> -> Acc -> (Acc -> T -> Acc) -> Acc
+WriteLine(Enumerable.Range(1, 10).Aggregate(0, (acc, i) => acc + i).Equals(55));
+// Aggregate : (Enumerable<T>, (acc, T) ->  acc ) -> acc
+
+
+// Example 9. 
+
+static Validator<T> FailFast<T>(IEnumerable<Validator<T>> validators)
+    => t => validators.Aggregate(Valid(t), (acc, validator) => acc.Bind(_ => validator(t)));
+
+static Validator<T> HarvestErrors<T>(IEnumerable<Validator<T>> validators)
+    => t =>
+    {
+        var errors = validators
+            .Map(validate => validate(t))
+            .Bind(v => v.Match
+            (
+                Invalid: errs => Some(errs),
+                Valid: _ => None
+            )).ToList();
+
+        return errors.Count == 0 ? Valid(t) : Invalid(errors.Flatten());
+    };
+
+public delegate Validation<T> Validator<T>(T t);
 
 public record Employee;
 public static class ConnectionStringExt
@@ -103,12 +133,7 @@ public static class ConnectionStringExt
     // => param, Connect(connStr, conn => conn.Query<T>(sql, param));
 }
 
-// Example 7. Modularzing => ReDME
 
-// Exmaple 8. Linq Aggregate Method
-// IEnumerable<T> -> Acc -> (Acc -> T -> Acc) -> Acc
-Enumerable.Range(1, 10).Aggregate(0, (acc, i) => acc + i).Equals()
-    // Aggregate : (Enumerable<T>, (acc, T) ->  acc ) -> acc
 
 public record SqlTemplate(string Value)
 {
