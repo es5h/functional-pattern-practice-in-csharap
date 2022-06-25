@@ -39,13 +39,43 @@ Callback 지옥 때문에 읽기힘듬
 
 위의 두메서드를 functional signature 로 표현하면 아래와 같다.
 
-Connect : `ConnectionString ->` **`(SqlConnection -> R) -> R`**
+Connect : `ConnectionString ->`**`(SqlConnection -> R) -> R`**
 
-Trace : `ILogger -> string -> (() -> R) -> R`
+Trace : `ILogger -> string -> `**`(() -> R) -> R`**
 
 추가로 2개 더 상상하자 Time, Transact
 
-Time : `ILogger -> String -> (() -> R) -> R`
+Time : `ILogger -> String -> `**`(() -> R) -> R`**
 
-Transact : `SqlConnection -> (SqlTransaction -> R) -> R"
-`
+Transact : `SqlConnection -> `**`(SqlTransaction -> R) -> R`**
+
+bold 돼 있는 부분은 공통적이다
+
+**`(T -> R) -> R`**: `(T -> dynamic) -> dynamic`
+로 추상화 가능 
+```c#
+public delegate dynamic MiddleWare(Func<T, dynamic> cont);
+```
+
+`Middleware<T>` is monad over `T`
+
+```c#
+public static MiddleWare<R> Bind<T, R> (this MidleWare<T> mw, Func<T, MiddleWare<R>> f)
+    => cont => mw(t => f(t)(cont));
+```
+
+```c#
+public static MiddleWare<R> Map<T, R> (this MidleWare<T> mw, Func<T, R> f)
+    => cont => mw(t => cont(f(t)));
+```
+
+```c#
+public class DbLogger
+{
+    MiddleWare<SqlConnection> Connect;
+    
+    public DbLogger(ConnectionString connString){
+        Connect = f => ConnectionHelper.Connect(connString, f);
+    }
+}
+```
