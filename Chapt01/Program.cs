@@ -1,7 +1,6 @@
 ﻿using static System.Console;
 using static System.Linq.Enumerable;
 
-
 // 일급객체로서의 함수
 void Example1()
 {
@@ -22,7 +21,7 @@ void Example2()
   nums.ToList().ForEach(WriteLine); // 1, 2, 3, 6
 }
 
-
-Example2();
+// Example1();
+// Example2();
 
 
