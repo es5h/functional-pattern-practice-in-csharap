@@ -27,9 +27,15 @@ void Example2()
   WriteLine(secondMinusFirst(2, 1)); // -1
 }
 
+void Excercise()
+{
+  List<int> nums = [3, 5, 1, 4, 2, 8, 9];
 
-Example2();
+  nums.QuickSort((x, y) => x - y).ToList().ForEach(WriteLine); // 1, 2, 3, 4, 5, 8, 9
+  nums.QuickSort((x, y) => y - x).ToList().ForEach(WriteLine); // 9, 8, 5, 4, 3, 2, 1
+}
 
+Excercise();
 
 public static class Ext
 {
@@ -46,4 +52,22 @@ public static class Ext
   
   public static Func<T1, T2, T3> SwapArgs<T1, T2, T3>(this Func<T2, T1, T3> f)
     => (t1, t2) => f(t2, t1);
+  
+  public static IEnumerable<T> QuickSort<T>(this IEnumerable<T> list, Comparison<T> comparer)
+  {
+    List<T> quickSort = list.ToList();
+
+    if (quickSort.ToList().Count <= 1)
+    {
+      return quickSort;
+    }
+    
+    T pivot = quickSort[0];
+    IEnumerable<T> rest = quickSort.Skip(1);
+
+    IEnumerable<T> left = rest.Filter(x => comparer(x, pivot) <= 0);
+    IEnumerable<T> right = rest.Filter(x => comparer(x, pivot) > 0);
+    
+    return left.QuickSort(comparer).Concat(new List<T> { pivot }).Concat(right.QuickSort(comparer)).ToList();
+  }
 }
