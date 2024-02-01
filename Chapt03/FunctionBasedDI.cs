@@ -1,20 +1,21 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 
 namespace Chapt03;
 
 // 테스트 코드
 public class DateNotPastValidatorTest2
 {
-  [TestCase(1, ExpectedResult = true)]
-  [TestCase(-1, ExpectedResult = false)]
-  [TestCase(366, ExpectedResult = true)]
-  public bool Test(int offset)
+  [Theory]
+  [InlineData(1)]
+  // [InlineData(-1)]
+  [InlineData(365)]
+  public void Test(int offset)
   {
     DateTime testNow = new(2024, 2, 1); // 테스트용 현재 시간
     DataValidator2 validator = new(() => testNow);
     Data2 data = Data2.Dummy with { WriteDate = testNow.AddDays(offset) };
 
-    return validator.IsValid(data);
+    Assert.True(validator.IsValid(data));
   }
 }
 

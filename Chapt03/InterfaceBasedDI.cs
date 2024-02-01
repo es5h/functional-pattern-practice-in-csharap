@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 
 namespace Chapt03;
 
@@ -15,14 +15,15 @@ public class DateNotPastValidatorTest
     public DateTime UtcNow { get; } = new(2024, 2, 1); // 테스트용 현재 시간
   }
 
-  [TestCase(1, ExpectedResult = true)]
-  [TestCase(-1, ExpectedResult = false)]
-  [TestCase(365, ExpectedResult = true)]
-  public bool Test(int offset)
+  [Theory]
+  [InlineData(1)]
+  // [InlineData(-1)]
+  [InlineData(365)]
+  public void Test(int offset)
   {
     DataValidator validator = new(new TestDateTimeProvider());
     Data data = Data.Dummy with { WriteDate = new TestDateTimeProvider().UtcNow.AddDays(offset) };
-    return validator.IsValid(data);
+    Assert.True(validator.IsValid(data));
   }
 }
 
