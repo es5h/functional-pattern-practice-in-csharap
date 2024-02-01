@@ -1,4 +1,4 @@
-﻿## Functional Programming 이란?
+﻿## Functional Programming?
 
 ### 0. 정리
 

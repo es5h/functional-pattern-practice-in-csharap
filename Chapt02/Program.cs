@@ -10,8 +10,8 @@ void Example1()
   // Local Function
   bool IsFactorOf6LF(int x) => 6 % x == 0;
 
-  Range(1, 6).Filter(isFactorOf6LE).ToList().ForEach(WriteLine); // 1, 2, 3, 6
-  Range(1, 6).Filter(IsFactorOf6LF).ToList().ForEach(WriteLine); // 1, 2, 3, 6
+  Range(1, 6).Filter(isFactorOf6LE).AggregatePrint(); // 1, 2, 3, 6
+  Range(1, 6).Filter(IsFactorOf6LF).AggregatePrint(); // 1, 2, 3, 6
 }
 
 // 고차함수 반환 형태
@@ -31,8 +31,8 @@ void Excercise()
 {
   List<int> nums = [3, 5, 1, 4, 2, 8, 9];
 
-  nums.QuickSort((x, y) => x - y).ToList().ForEach(WriteLine); // 1, 2, 3, 4, 5, 8, 9
-  nums.QuickSort((x, y) => y - x).ToList().ForEach(WriteLine); // 9, 8, 5, 4, 3, 2, 1
+  nums.QuickSort((x, y) => x - y).AggregatePrint(); // 1, 2, 3, 4, 5, 8, 9
+  nums.QuickSort((x, y) => y - x).AggregatePrint(); // 9, 8, 5, 4, 3, 2, 1
 }
 
 Excercise();
@@ -69,5 +69,15 @@ public static class Ext
     IEnumerable<T> right = rest.Filter(x => comparer(x, pivot) > 0);
     
     return left.QuickSort(comparer).Concat(new List<T> { pivot }).Concat(right.QuickSort(comparer)).ToList();
+  }
+  
+  private static void Print(this string c)
+  {
+    WriteLine(c);
+  }
+  
+  public static void AggregatePrint<T>(this IEnumerable<T> source)
+  {
+    source.Aggregate(string.Empty, (acc, x) => $"{acc} {x}").Print();
   }
 }
