@@ -22,3 +22,9 @@ Partial Function 은 항상 결과값을 보장 할 수 없기 때문에 문제�
 **예시**
 `int.Parse`(`string -> int`) 는 Partial Function 이다. Parese가 실패할 경우 Exception을 던져, int를 반환하지 않는다.
 
+### 3. Null 을 안전하게 다루려면?
+null 이 넘어가지 않는 다는 것을 보장하기 위해, null check과 ArgumentNullException을 던지지 않게 한다.
+- NRT 활성화
+- T? 대신 Option<T> 사용
+코드 경계를 파악해서, 라이브러리용 public method, web api, message broker 등에 null 이 스며들지 않게한다.
+- 필수 값의 경우, ArgunemtNullException을 던지거나, 400 Bad Request를 반환한다, messge를 거절한다.
