@@ -23,13 +23,13 @@ void Example2()
   Console.WriteLine(Int.Parse("abc")); // None
 }
 
-void Excercise1()
+void Exercise1()
 {
   Console.WriteLine(Enum.Parse<DayOfWeek>("Monday")); // Some(Monday)
   Console.WriteLine(Enum.Parse<DayOfWeek>("Moonday")); // None
 }
 
-void Excercise2()
+void Exercise2()
 {
   new List<int> { 1, 2, 3, 4, 5 }.Lookup(i => i % 2 == 0).Match(
     None: () => Console.WriteLine("No even numbers found"),
@@ -37,11 +37,13 @@ void Excercise2()
   );
 }
 
-void Excercise3()
+void Exercise3()
 {
-  Console.WriteLine(Email.Create("es5h@github.com").Match(Some: (e) => e, None: () => "Invalid email")); // es5h@github.com
-  Console.WriteLine(Email.Create("es5h#github.com").Match(Some: (e) => e, None: () => "Invalid email")); // Invalid email
+  Console.WriteLine(Email.Create("es5h@github.com")); // Some(es5h@github.com)
+  Console.WriteLine(Email.Create("es5h#github.com")); // None
 }
+
+Exercise3();
 
 public class Email
 {
@@ -57,6 +59,8 @@ public class Email
       : Option<Email>.None;
 
   public static implicit operator string(Email email) => email.Value;
+
+  public override string ToString() => Value;
 }
 
 
