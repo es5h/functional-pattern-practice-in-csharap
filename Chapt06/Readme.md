@@ -25,7 +25,8 @@ Bind(SelectMany, FlatMap, etc) 가 정의된 타입 C를 Monad라고 한다.
 - 모든 Monad는 Functor 인가?
   - 맞다. Map은 Bind와 Return으로 구현 가능하다.
 - 모든 Functor는 Monad 인가?
-  - 아니다.
+  - 아니다. Non-monadic Functor의 예시로 `Set<T>` 가 있다.
+    - Set은 Bind를 가지지 않는다. (Set은 중복을 허용하지 않고, 순서가 없다 -> Associative Law를 만족하지 않는다.)
 
 ### 5. 다른 계층에서의 코딩
 - 일반 값과 고차 값
