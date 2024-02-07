@@ -23,7 +23,7 @@ public class MakeTransferController(ILogger loger, IValidator<MakeTransfer> vali
     => Handle1(transfer)
       .ToResult1();
   public IActionResult Ok() => new OkResult();
-  public IActionResult BadRequest(string message) => new BadRequestObjectResult(message);
+  public IActionResult BadRequest(Error error) => new BadRequestObjectResult(error.Message);
 
   public IActionResult OnFailure(Error error)
   {
@@ -34,30 +34,30 @@ public class MakeTransferController(ILogger loger, IValidator<MakeTransfer> vali
   public IActionResult MakeTransfer2([FromBody] MakeTransfer transfer)
     => Handle1(transfer)
       .Match<IActionResult>(
-        Left: x => BadRequest(x.Message),
-        Right: t => t.Match(
+        Fail: x => BadRequest(x[0]),
+        Succ: t => t.Match(
           Succ: _ => Ok(),
           Fail: e => OnFailure(e)));
   
-  Either<Error, Try<Unit>> Handle1(MakeTransfer transfer) =>
+  Validation<Error, Try<Unit>> Handle1(MakeTransfer transfer) =>
     Validate(transfer)
       .Map(Save);
 
-   
-  Either<Error, MakeTransfer> Validate(MakeTransfer transfer) => Validate1(transfer).Bind(Validate2);
-  Either<Error, MakeTransfer> Validate1(MakeTransfer transfer) => transfer;
-  Either<Error, MakeTransfer> Validate2(MakeTransfer transfer) => transfer;
+
+  Validation<Error, MakeTransfer> Validate(MakeTransfer transfer) => Validate1(transfer).Bind(Validate2);
+  Validation<Error, MakeTransfer> Validate1(MakeTransfer transfer) => transfer;
+  Validation<Error, MakeTransfer> Validate2(MakeTransfer transfer) => transfer;
   Try<Unit> Save(MakeTransfer account) => req.Save(account);
 }
 
 public static class Ext
 {
-  public static ResultDto<T> ToResult1<T>(this Either<Error, Try<T>> either)
-    => either.Match(
-      Right: t => t.Match(
+  public static ResultDto<T> ToResult1<T>(this Validation<Error, Try<T>> valid)
+    => valid.Match(
+      Succ: t => t.Match(
         Succ: data => new ResultDto<T>(data),
         Fail: e => new ResultDto<T>(e)),
-      Left: e => new ResultDto<T>(e));
+      Fail: e => new ResultDto<T>(e[0]));
 }
 
 public record ResultDto<T>
