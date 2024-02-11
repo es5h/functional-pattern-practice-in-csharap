@@ -81,3 +81,10 @@ IEnumerable<T> Query<T>(this IDbConnection connection, string sql, object param)
 - 다만, 이는 엄청난 수의 interface 와 boilerplate 코드를 만들어야 한다.
   - Testability를 위해, fake 구현을 만드는것도 복잡하다.
 
+- 코드 참고
+### 8. Fold
+- `Aggregate: IEnumerable<T> -> Acc -> (Acc -> T -> Acc) -> Acc'
+
+### 8. Validation 
+- Fail Fast
+- Collect Errors
